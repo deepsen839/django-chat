@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<script type="text/javascript">
+const socket = new WebSocket('ws://' + window.location.host + '/ws/activity/');
+
+// socket.onopen = function(e) {
+//   console.log("Connection established!");
+//   // Send active status on connection open
+//   socket.send(JSON.stringify({'status': 'active'}));
+// };
+
+socket.onmessage = function(e) {
+  const data = JSON.parse(e.data);
+  console.log(data)
+  const message = document.querySelector('#messagebox')
+  message.innerHTML = message.innerHTML +data.name+'\n'+ data.message
+};
+
+document.addEventListener('DOMContentLoaded', function () {
+
+  document.querySelector('#send').addEventListener('click',function(event){
+let message = document.querySelector('input[name="message"]').value
+let name = document.querySelector('input[name="name"]').value
+
+
+socket.send(JSON.stringify({'name':name,'message':message}));
+
+})
+
+})
+
+</script>
+<body>
+    
+</body>
+<div id="message"></div>
+<textarea id="messagebox"></textarea>
+<label>Name</label>
+<input name="name" value="" type="text"/>
+<label>message</label>
+<input name="message" value="" type="text"/>
+<input type="button" value="send" id="send"/>
+</html>
